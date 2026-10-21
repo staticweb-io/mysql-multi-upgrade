@@ -4,7 +4,7 @@ Upgrades a MariaDB or MySQL data directory in place, one major
 version at a time, until it reaches the version you want.
 
 ```console
-$ nix run github:john-shaffer/mysql-multi-upgrade -- upgrade --to 11.8 /var/lib/mysql
+$ nix run github:staticweb-io/mysql-multi-upgrade -- upgrade --to 11.8 /var/lib/mysql
 /var/lib/mysql is mariadb 10.3.22
 Steps: mariadb-10.3 -> mariadb-10.4 -> mariadb-10.5 -> mariadb-10.6 -> mariadb-10.11 -> mariadb-11.4 -> mariadb-11.8
 ...
