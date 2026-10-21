@@ -1,7 +1,7 @@
 name = "versions lists the upgrade chains"
 
 [[steps]]
-run = "datadir-upgrade versions"
+run = "mysql-multi-upgrade versions"
 
 [steps.expected]
 stdout = """

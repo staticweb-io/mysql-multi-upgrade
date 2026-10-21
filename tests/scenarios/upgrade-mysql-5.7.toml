@@ -4,7 +4,7 @@ name = "upgrade takes a mysql-5.7 data dir to mysql-8.4"
 run = "use-fixture mysql-5.7"
 
 [[steps]]
-run = "datadir-upgrade upgrade data"
+run = "mysql-multi-upgrade upgrade data"
 
 [steps.expected]
 # Users created on 5.7 default to mysql_native_password
@@ -12,7 +12,7 @@ stderr-contains = "Warning: These users authenticate with mysql_native_password,
 stdout-matches = "^Upgraded .*/data from mysql 5\\.7\\.\\d+ to mysql 8\\.4\\.\\d+$"
 
 [[steps]]
-run = "datadir-upgrade detect data"
+run = "mysql-multi-upgrade detect data"
 
 [steps.expected]
 stdout-matches = "^mysql 8\\.4\\.\\d+$"

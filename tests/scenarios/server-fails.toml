@@ -11,7 +11,7 @@ exit 3
 run = "chmod +x broken/bin/mariadbd && use-fixture mariadb-10.3"
 
 [[steps]]
-run = "datadir-upgrade upgrade --server mariadb-10.5=$PWD/broken data"
+run = "mysql-multi-upgrade upgrade --server mariadb-10.5=$PWD/broken data"
 
 [steps.expected]
 exit-code = 1
@@ -23,13 +23,13 @@ stderr-contains = [
 ]
 
 [[steps]]
-run = "datadir-upgrade detect data"
+run = "mysql-multi-upgrade detect data"
 
 [steps.expected]
 stdout-matches = "^mariadb 10\\.4\\.\\d+$"
 
 [[steps]]
-run = "datadir-upgrade upgrade data && verify-as mariadb-11.8 mariadb-10.3"
+run = "mysql-multi-upgrade upgrade data && verify-as mariadb-11.8 mariadb-10.3"
 
 [steps.expected]
 stdout-matches = "^verified with 11\\.8\\."

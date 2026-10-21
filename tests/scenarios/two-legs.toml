@@ -4,7 +4,7 @@ name = "upgrade can stop at a version and continue from it later"
 run = "use-fixture mariadb-10.3"
 
 [[steps]]
-run = "datadir-upgrade upgrade --to 10.6 data"
+run = "mysql-multi-upgrade upgrade --to 10.6 data"
 
 [steps.expected]
 stdout-contains = "Steps: mariadb-10.3 -> mariadb-10.4 -> mariadb-10.5 -> mariadb-10.6\n"
@@ -17,7 +17,7 @@ run = "verify-as mariadb-10.6 mariadb-10.3"
 stdout-matches = "^verified with 10\\.6\\."
 
 [[steps]]
-run = "datadir-upgrade upgrade --to 11.8 data"
+run = "mysql-multi-upgrade upgrade --to 11.8 data"
 
 [steps.expected]
 stdout-contains = "Steps: mariadb-10.6 -> mariadb-10.11 -> mariadb-11.4 -> mariadb-11.8\n"

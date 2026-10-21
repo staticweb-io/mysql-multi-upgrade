@@ -1,56 +1,56 @@
 name = "Data dirs and targets that can't be upgraded fail before any server runs"
 
 [[steps]]
-run = "datadir-upgrade upgrade --to 10.6 $FIXTURES/mariadb-11.4/data"
+run = "mysql-multi-upgrade upgrade --to 10.6 $FIXTURES/mariadb-11.4/data"
 
 [steps.expected]
 exit-code = 1
 stderr-matches = "^Error: Can't downgrade mariadb 11\\.4\\.\\d+ to mariadb-10\\.6$"
 
 [[steps]]
-run = "datadir-upgrade upgrade --to 11.8 $FIXTURES/mysql-5.7/data"
+run = "mysql-multi-upgrade upgrade --to 11.8 $FIXTURES/mysql-5.7/data"
 
 [steps.expected]
 exit-code = 1
 stderr-matches = "^Error: Can't upgrade mysql 5\\.7\\.\\d+ to mariadb-11\\.8$"
 
 [[steps]]
-run = "datadir-upgrade upgrade --to 10.7 $FIXTURES/mariadb-10.3/data"
+run = "mysql-multi-upgrade upgrade --to 10.7 $FIXTURES/mariadb-10.3/data"
 
 [steps.expected]
 exit-code = 1
 stderr-contains = "Error: Unsupported target version '10.7'. Supported: mariadb-10.3, "
 
 [[steps]]
-run = "datadir-upgrade upgrade --to mysql-11.8 $FIXTURES/mariadb-10.3/data"
+run = "mysql-multi-upgrade upgrade --to mysql-11.8 $FIXTURES/mariadb-10.3/data"
 
 [steps.expected]
 exit-code = 1
 stderr-contains = "Error: Unsupported target version 'mysql-11.8'."
 
 [[steps]]
-run = "mkdir empty && datadir-upgrade upgrade empty"
+run = "mkdir empty && mysql-multi-upgrade upgrade empty"
 
 [steps.expected]
 exit-code = 1
 stderr-matches = "^Error: .*/empty doesn't look like a MariaDB or MySQL data directory$"
 
 [[steps]]
-run = "datadir-upgrade detect missing"
+run = "mysql-multi-upgrade detect missing"
 
 [steps.expected]
 exit-code = 1
 stderr = "Error: missing is not a directory\n"
 
 [[steps]]
-run = "mkdir -p old/mysql && touch old/aria_log_control && echo 10.2.44-MariaDB > old/mysql_upgrade_info && datadir-upgrade upgrade old"
+run = "mkdir -p old/mysql && touch old/aria_log_control && echo 10.2.44-MariaDB > old/mysql_upgrade_info && mysql-multi-upgrade upgrade old"
 
 [steps.expected]
 exit-code = 1
 stderr-matches = "^Error: mariadb 10\\.2\\.44 is older than mariadb-10\\.3, the oldest supported version$"
 
 [[steps]]
-run = "datadir-upgrade upgrade --server mariadb-10.3 $FIXTURES/mariadb-10.3/data"
+run = "mysql-multi-upgrade upgrade --server mariadb-10.3 $FIXTURES/mariadb-10.3/data"
 
 [steps.expected]
 exit-code = 1

@@ -1,10 +1,10 @@
-# datadir-upgrade
+# mysql-multi-upgrade
 
 Upgrades a MariaDB or MySQL data directory in place, one major
 version at a time, until it reaches the version you want.
 
 ```console
-$ nix run github:john-shaffer/datadir-upgrade -- upgrade --to 11.8 /var/lib/mysql
+$ nix run github:john-shaffer/mysql-multi-upgrade -- upgrade --to 11.8 /var/lib/mysql
 /var/lib/mysql is mariadb 10.3.22
 Steps: mariadb-10.3 -> mariadb-10.4 -> mariadb-10.5 -> mariadb-10.6 -> mariadb-10.11 -> mariadb-11.4 -> mariadb-11.8
 ...
@@ -34,17 +34,17 @@ MySQL data directories can't become MariaDB ones or the reverse.
 
 ## How it works
 
-`datadir-upgrade detect DATADIR` finds the newest version that has
+`mysql-multi-upgrade detect DATADIR` finds the newest version that has
 written to the data directory, from:
 
 - `mariadb_upgrade_info`, `mysql_upgrade_info` and `mysql_upgrade_history`
 - The creator in the InnoDB redo log headers
 - The version in each table's `.frm` file
 
-`datadir-upgrade plan DATADIR [--to VERSION]` prints the versions
+`mysql-multi-upgrade plan DATADIR [--to VERSION]` prints the versions
 that an upgrade would run.
 
-`datadir-upgrade upgrade DATADIR [--to VERSION]` builds each of
+`mysql-multi-upgrade upgrade DATADIR [--to VERSION]` builds each of
 those servers with `nix build`, then runs each in turn:
 
 1. Start the server with `--skip-grant-tables`, so no password is
@@ -73,7 +73,7 @@ After an upgrade to MySQL 8.4, it warns about users that use
 - `--log-dir DIR`: where to keep the server logs.
 - `--server NAME=PATH`: use the server at `PATH`, such as
   `mariadb-10.4=/nix/store/...-mariadb-server-10.4.27`.
-  `DATADIR_UPGRADE_SERVERS` can name a JSON file with the same map.
+  `MYSQL_MULTI_UPGRADE_SERVERS` can name a JSON file with the same map.
 - `--flake REF`: build servers from another flake.
 
 Run it as the data directory's owner, or as root, in which case each

@@ -4,7 +4,7 @@ name = "upgrade takes a mysql-8.0 data dir to mysql-8.4"
 run = "use-fixture mysql-8.0"
 
 [[steps]]
-run = "datadir-upgrade upgrade data"
+run = "mysql-multi-upgrade upgrade data"
 
 [steps.expected]
 # 8.0 already defaults to caching_sha2_password
@@ -12,7 +12,7 @@ stderr-not-contains = "Warning"
 stdout-matches = "^Upgraded .*/data from mysql 8\\.0\\.\\d+ to mysql 8\\.4\\.\\d+$"
 
 [[steps]]
-run = "datadir-upgrade detect data"
+run = "mysql-multi-upgrade detect data"
 
 [steps.expected]
 stdout-matches = "^mysql 8\\.4\\.\\d+$"

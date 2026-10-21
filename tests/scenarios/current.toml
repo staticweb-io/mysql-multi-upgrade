@@ -4,7 +4,7 @@ name = "upgrade to the current version runs only that version"
 run = "use-fixture mariadb-11.8"
 
 [[steps]]
-run = "datadir-upgrade upgrade --to 11.8 data"
+run = "mysql-multi-upgrade upgrade --to 11.8 data"
 
 [steps.expected]
 stdout-contains = "Steps: mariadb-11.8\n"

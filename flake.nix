@@ -68,19 +68,19 @@
           "mysql-8.0" = (from inputs.mysql-8_0).mysql80;
           "mysql-8.4" = (from inputs.mysql-8_4).mysql84;
         };
-      datadirUpgrade =
+      mysqlMultiUpgrade =
         pkgs:
-        pkgs.runCommand "datadir-upgrade"
+        pkgs.runCommand "mysql-multi-upgrade"
           {
-            meta.mainProgram = "datadir-upgrade";
+            meta.mainProgram = "mysql-multi-upgrade";
             nativeBuildInputs = [ pkgs.makeWrapper ];
           }
           ''
             mkdir -p $out/bin $out/libexec
-            substitute ${./datadir_upgrade.py} $out/libexec/datadir_upgrade.py \
+            substitute ${./mysql_multi_upgrade.py} $out/libexec/mysql_multi_upgrade.py \
               --replace-fail '@flake@' 'path:${self}'
-            makeWrapper ${pkgs.python3.interpreter} $out/bin/datadir-upgrade \
-              --add-flags $out/libexec/datadir_upgrade.py
+            makeWrapper ${pkgs.python3.interpreter} $out/bin/mysql-multi-upgrade \
+              --add-flags $out/libexec/mysql_multi_upgrade.py
           '';
       fixtures =
         system: pkgs:
@@ -100,7 +100,7 @@
           fixture =
             name: flavor: mode:
             pkgs.runCommand
-              "datadir-upgrade-fixture-${name}${nixpkgs.lib.optionalString (mode == "crash") "-crash"}"
+              "mysql-multi-upgrade-fixture-${name}${nixpkgs.lib.optionalString (mode == "crash") "-crash"}"
               {
                 nativeBuildInputs = with pkgs; [
                   hostname
@@ -126,10 +126,10 @@
                 "mysql-5.7"
               ];
         in
-        pkgs.linkFarm "datadir-upgrade-fixtures" (clean ++ crashed);
+        pkgs.linkFarm "mysql-multi-upgrade-fixtures" (clean ++ crashed);
       testsDir =
         pkgs:
-        pkgs.runCommand "datadir-upgrade-tests" { buildInputs = [ pkgs.bash ]; } ''
+        pkgs.runCommand "mysql-multi-upgrade-tests" { buildInputs = [ pkgs.bash ]; } ''
           cp -r ${./tests} $out
           chmod -R u+w $out
           patchShebangs $out
@@ -140,10 +140,10 @@
         let
           serversJson = pkgs.writeText "servers.json" (builtins.toJSON (servers system));
         in
-        pkgs.runCommand "datadir-upgrade-scenario-report"
+        pkgs.runCommand "mysql-multi-upgrade-scenario-report"
           {
             nativeBuildInputs = with pkgs; [
-              (datadirUpgrade pkgs)
+              (mysqlMultiUpgrade pkgs)
               hostname
               inputs.tact.packages.${system}.default
               jq
@@ -152,7 +152,7 @@
           }
           ''
             mkdir -p $out
-            export DATADIR_UPGRADE_SERVERS=${serversJson}
+            export MYSQL_MULTI_UPGRADE_SERVERS=${serversJson}
             export FIXTURES=${fixtures system pkgs}
             export TESTS=${testsDir pkgs}
             export PATH=$TESTS/bin:$PATH
@@ -166,7 +166,7 @@
     {
       checks = forSystems (
         system: pkgs: {
-          scenarios = pkgs.runCommand "datadir-upgrade-scenarios" { } ''
+          scenarios = pkgs.runCommand "mysql-multi-upgrade-scenarios" { } ''
             if [ "$(cat ${scenarioReport system pkgs}/exit-status)" != 0 ]; then
               cat ${scenarioReport system pkgs}/log >&2
               exit 1
@@ -193,7 +193,7 @@
         system: pkgs:
         servers system
         // {
-          default = datadirUpgrade pkgs;
+          default = mysqlMultiUpgrade pkgs;
           fixtures = fixtures system pkgs;
           scenario-report = scenarioReport system pkgs;
         }

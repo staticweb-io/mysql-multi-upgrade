@@ -16,7 +16,7 @@ format:
 
 # Upgrade a data dir with servers built from this checkout
 run *args:
-    python3 datadir_upgrade.py {{ args }}
+    python3 mysql_multi_upgrade.py {{ args }}
 
 # Run all scenarios
 test:
@@ -32,12 +32,12 @@ test-local *paths="tests/scenarios":
     set -euo pipefail
     bin="$(mktemp -d)"
     trap 'rm -rf "$bin"' EXIT
-    printf '#!/bin/sh\nexec python3 %s "$@"\n' "$PWD/datadir_upgrade.py" > "$bin/datadir-upgrade"
-    chmod +x "$bin/datadir-upgrade"
+    printf '#!/bin/sh\nexec python3 %s "$@"\n' "$PWD/mysql_multi_upgrade.py" > "$bin/mysql-multi-upgrade"
+    chmod +x "$bin/mysql-multi-upgrade"
     nix eval --json ".#packages.$(nix eval --impure --raw --expr builtins.currentSystem)" --apply \
       'p: builtins.mapAttrs (n: v: "${v}") (removeAttrs p ["default" "fixtures" "scenario-report"])' \
       > "$bin/servers.json"
-    export DATADIR_UPGRADE_SERVERS="$bin/servers.json"
+    export MYSQL_MULTI_UPGRADE_SERVERS="$bin/servers.json"
     export FIXTURES="$(nix build --no-link --print-out-paths .#fixtures)"
     export TESTS="$PWD/tests"
     export PATH="$bin:$TESTS/bin:$PATH"
@@ -51,7 +51,7 @@ smoke fixture="mariadb-10.3":
     trap 'rm -rf "$dir"' EXIT
     cp -r "$(nix build .#fixtures --print-out-paths)/{{ fixture }}/data" "$dir/data"
     chmod -R u+w "$dir/data"
-    python3 datadir_upgrade.py upgrade "$dir/data"
+    python3 mysql_multi_upgrade.py upgrade "$dir/data"
 
 # Update dependencies
 update:

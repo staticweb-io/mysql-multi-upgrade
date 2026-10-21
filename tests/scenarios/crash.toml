@@ -1,7 +1,7 @@
 name = "upgrade recovers data dirs from servers that crashed"
 
 [[steps]]
-run = "use-fixture mariadb-10.5-crash && datadir-upgrade upgrade data"
+run = "use-fixture mariadb-10.5-crash && mysql-multi-upgrade upgrade data"
 
 [steps.expected]
 stdout-contains = "Steps: mariadb-10.5 -> "
@@ -13,7 +13,7 @@ run = "verify-as mariadb-11.8 mariadb-10.5-crash"
 stdout-matches = "^verified with 11\\.8\\."
 
 [[steps]]
-run = "use-fixture mysql-5.7-crash mysql && datadir-upgrade upgrade mysql"
+run = "use-fixture mysql-5.7-crash mysql && mysql-multi-upgrade upgrade mysql"
 
 [steps.expected]
 stdout-contains = "Steps: mysql-5.7 -> mysql-8.0 -> mysql-8.4\n"

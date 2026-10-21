@@ -230,7 +230,7 @@ def default_flake():
     if (here / "flake.nix").exists():
         return f"path:{here}"
     raise UpgradeError(
-        "Pass --flake, since this copy of datadir-upgrade doesn't know its flake"
+        "Pass --flake, since this copy of mysql-multi-upgrade doesn't know its flake"
     )
 
 
@@ -450,7 +450,7 @@ def make_run_dir(datadir):
     base = os.environ.get("TMPDIR", "/tmp")
     if len(base) > 60:
         base = "/tmp"
-    d = tempfile.mkdtemp(prefix="datadir-upgrade.", dir=base)
+    d = tempfile.mkdtemp(prefix="mysql-multi-upgrade.", dir=base)
     if os.geteuid() == 0:
         st = os.stat(datadir)
         os.chown(d, st.st_uid, st.st_gid)
@@ -469,7 +469,7 @@ def upgrade(
     servers = resolve_servers(current.flavor, steps, overrides, flake)
     # Absolute, since servers resolve --log-error from the data dir
     log_dir = os.path.abspath(
-        log_dir or tempfile.mkdtemp(prefix="datadir-upgrade-logs.")
+        log_dir or tempfile.mkdtemp(prefix="mysql-multi-upgrade-logs.")
     )
     os.makedirs(log_dir, exist_ok=True)
     print(f"Server logs are in {log_dir}", flush=True)
@@ -507,7 +507,7 @@ def upgrade(
 
 def parse_overrides(pairs):
     overrides = {}
-    servers_file = os.environ.get("DATADIR_UPGRADE_SERVERS")
+    servers_file = os.environ.get("MYSQL_MULTI_UPGRADE_SERVERS")
     if servers_file:
         overrides.update(json.loads(Path(servers_file).read_text()))
     for pair in pairs:
@@ -522,7 +522,7 @@ def parse_overrides(pairs):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
-        prog="datadir-upgrade", description=__doc__.splitlines()[0]
+        prog="mysql-multi-upgrade", description=__doc__.splitlines()[0]
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

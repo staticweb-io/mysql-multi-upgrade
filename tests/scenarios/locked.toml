@@ -6,10 +6,10 @@ run = "use-fixture mariadb-10.6"
 [[steps]]
 run = """
 . "$TESTS/lib.sh"
-server="$(jq -r '.["mariadb-10.6"]' "$DATADIR_UPGRADE_SERVERS")"
+server="$(jq -r '.["mariadb-10.6"]' "$MYSQL_MULTI_UPGRADE_SERVERS")"
 run="$(run_dir)"
 start_server "$server" "$PWD/data" "$run"
-datadir-upgrade upgrade data
+mysql-multi-upgrade upgrade data
 status=$?
 stop_server
 exit $status
@@ -20,7 +20,7 @@ exit-code = 1
 stderr-matches = "^Error: A server is using .*/data\\. Stop it first\\.$"
 
 [[steps]]
-run = "datadir-upgrade upgrade data && verify-as mariadb-11.8 mariadb-10.6"
+run = "mysql-multi-upgrade upgrade data && verify-as mariadb-11.8 mariadb-10.6"
 
 [steps.expected]
 stdout-matches = "^verified with 11\\.8\\."

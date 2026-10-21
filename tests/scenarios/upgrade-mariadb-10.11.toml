@@ -4,13 +4,13 @@ name = "upgrade takes a mariadb-10.11 data dir to mariadb-11.8"
 run = "use-fixture mariadb-10.11"
 
 [[steps]]
-run = "datadir-upgrade upgrade data"
+run = "mysql-multi-upgrade upgrade data"
 
 [steps.expected]
 stdout-matches = "^Upgraded .*/data from mariadb 10\\.11\\.\\d+ to mariadb 11\\.8\\.\\d+$"
 
 [[steps]]
-run = "datadir-upgrade detect data"
+run = "mysql-multi-upgrade detect data"
 
 [steps.expected]
 stdout-matches = "^mariadb 11\\.8\\.\\d+$"
