@@ -31,6 +31,10 @@
       url = "github:NixOS/nixpkgs/nixos-25.11";
     };
     mysql-8_4.follows = "nixpkgs";
+    sand = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:john-shaffer/sand";
+    };
     tact = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:john-shaffer/tact";
@@ -180,10 +184,11 @@
         system: pkgs: {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              inputs.tact.packages.${system}.default
               jq
               just
               python3
+              inputs.sand.packages.${system}.default
+              inputs.tact.packages.${system}.default
             ];
           };
         }

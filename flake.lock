@@ -5,6 +5,29 @@
         "devshell": "devshell",
         "nix-fetcher-data": "nix-fetcher-data",
         "nixpkgs": [
+          "sand",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792416202,
+        "narHash": "sha256-YlZYw921pS/ToDnZWNDMvZdGUQSoNxS5OmmQbkdQQ3Q=",
+        "owner": "jlesquembre",
+        "repo": "clj-nix",
+        "rev": "cdc83eb3695c70286bddb77ff7e70e534207906c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "repo": "clj-nix",
+        "type": "github"
+      }
+    },
+    "clj-nix_2": {
+      "inputs": {
+        "devshell": "devshell_2",
+        "nix-fetcher-data": "nix-fetcher-data_2",
+        "nixpkgs": [
           "tact",
           "nixpkgs"
         ]
@@ -24,6 +47,28 @@
       }
     },
     "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "sand",
+          "clj-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791918082,
+        "narHash": "sha256-oN9JrhRfHa7MUTdUq+11dHn7u0Z4WfEA4mhzBq0/zoQ=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "9e29c63dde99a2d80c94b3d024c9768c01544558",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
+        "type": "github"
+      }
+    },
+    "devshell_2": {
       "inputs": {
         "nixpkgs": [
           "tact",
@@ -133,6 +178,28 @@
     "nix-fetcher-data": {
       "inputs": {
         "nixpkgs": [
+          "sand",
+          "clj-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792178580,
+        "narHash": "sha256-mgYSCONYCvRxseh3nssE2aLV3xeCXY6UVXkntgCUe+s=",
+        "owner": "jlesquembre",
+        "repo": "nix-fetcher-data",
+        "rev": "5df8c50525f4ea9f40b6ffe4183386d92e4874f5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "repo": "nix-fetcher-data",
+        "type": "github"
+      }
+    },
+    "nix-fetcher-data_2": {
+      "inputs": {
+        "nixpkgs": [
           "tact",
           "clj-nix",
           "nixpkgs"
@@ -191,10 +258,32 @@
           "nixpkgs"
         ],
         "nixpkgs": "nixpkgs",
+        "sand": "sand",
         "tact": "tact"
       }
     },
     "sand": {
+      "inputs": {
+        "clj-nix": "clj-nix",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792558528,
+        "narHash": "sha256-ibO/HwGiL3fZVtFf2uNSRk1qYSRctkA+KiUVDTP1sLY=",
+        "owner": "john-shaffer",
+        "repo": "sand",
+        "rev": "45d53da2024c8e692487fe3066a089634ee28c57",
+        "type": "github"
+      },
+      "original": {
+        "owner": "john-shaffer",
+        "repo": "sand",
+        "type": "github"
+      }
+    },
+    "sand_2": {
       "inputs": {
         "clj-nix": [
           "tact",
@@ -221,11 +310,11 @@
     },
     "tact": {
       "inputs": {
-        "clj-nix": "clj-nix",
+        "clj-nix": "clj-nix_2",
         "nixpkgs": [
           "nixpkgs"
         ],
-        "sand": "sand"
+        "sand": "sand_2"
       },
       "locked": {
         "lastModified": 1792548879,
