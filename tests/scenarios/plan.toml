@@ -1,0 +1,31 @@
+name = "plan prints the versions that would run"
+
+[[steps]]
+run = "datadir-upgrade plan $FIXTURES/mariadb-10.3/data"
+
+[steps.expected]
+stdout = "mariadb-10.3 -> mariadb-10.4 -> mariadb-10.5 -> mariadb-10.6 -> mariadb-10.11 -> mariadb-11.4 -> mariadb-11.8\n"
+
+[[steps]]
+run = "datadir-upgrade plan --to 10.6 $FIXTURES/mariadb-10.4/data"
+
+[steps.expected]
+stdout = "mariadb-10.4 -> mariadb-10.5 -> mariadb-10.6\n"
+
+[[steps]]
+run = "datadir-upgrade plan --to mariadb-11.4 $FIXTURES/mariadb-11.4/data"
+
+[steps.expected]
+stdout = "mariadb-11.4\n"
+
+[[steps]]
+run = "datadir-upgrade plan --to 8.0 $FIXTURES/mysql-5.7/data"
+
+[steps.expected]
+stdout = "mysql-5.7 -> mysql-8.0\n"
+
+[[steps]]
+run = "datadir-upgrade plan $FIXTURES/mysql-8.4/data"
+
+[steps.expected]
+stdout = "mysql-8.4\n"

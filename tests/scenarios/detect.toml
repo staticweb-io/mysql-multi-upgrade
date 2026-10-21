@@ -1,0 +1,73 @@
+name = "detect reads the version of data dirs from each server"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-10.3/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.3\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-10.4/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.4\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-10.5/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.5\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-10.6/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.6\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-10.11/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.11\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-11.4/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 11\\.4\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-11.8/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 11\\.8\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mysql-5.7/data"
+
+[steps.expected]
+stdout-matches = "^mysql 5\\.7\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mysql-8.0/data"
+
+[steps.expected]
+stdout-matches = "^mysql 8\\.0\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mysql-8.4/data"
+
+[steps.expected]
+stdout-matches = "^mysql 8\\.4\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mariadb-10.5-crash/data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.5\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect $FIXTURES/mysql-5.7-crash/data"
+
+[steps.expected]
+stdout-matches = "^mysql 5\\.7\\.\\d+$"

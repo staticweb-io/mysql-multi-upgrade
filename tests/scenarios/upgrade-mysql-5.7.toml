@@ -1,0 +1,24 @@
+name = "upgrade takes a mysql-5.7 data dir to mysql-8.4"
+
+[[steps]]
+run = "use-fixture mysql-5.7"
+
+[[steps]]
+run = "datadir-upgrade upgrade data"
+
+[steps.expected]
+# Users created on 5.7 default to mysql_native_password
+stderr-contains = "Warning: These users authenticate with mysql_native_password, which MySQL 8.4 disables by default: app@localhost, root@localhost."
+stdout-matches = "^Upgraded .*/data from mysql 5\\.7\\.\\d+ to mysql 8\\.4\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect data"
+
+[steps.expected]
+stdout-matches = "^mysql 8\\.4\\.\\d+$"
+
+[[steps]]
+run = "verify-as mysql-8.4 mysql-5.7"
+
+[steps.expected]
+stdout-matches = "^verified with 8\\.4\\.\\d+$"

@@ -1,0 +1,247 @@
+{
+  "nodes": {
+    "clj-nix": {
+      "inputs": {
+        "devshell": "devshell",
+        "nix-fetcher-data": "nix-fetcher-data",
+        "nixpkgs": [
+          "tact",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792416202,
+        "narHash": "sha256-YlZYw921pS/ToDnZWNDMvZdGUQSoNxS5OmmQbkdQQ3Q=",
+        "owner": "jlesquembre",
+        "repo": "clj-nix",
+        "rev": "cdc83eb3695c70286bddb77ff7e70e534207906c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "repo": "clj-nix",
+        "type": "github"
+      }
+    },
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "tact",
+          "clj-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791918082,
+        "narHash": "sha256-oN9JrhRfHa7MUTdUq+11dHn7u0Z4WfEA4mhzBq0/zoQ=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "9e29c63dde99a2d80c94b3d024c9768c01544558",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
+        "type": "github"
+      }
+    },
+    "mariadb-10_3": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1620055814,
+        "narHash": "sha256-8LEHoYSJiL901bTMVatq+rf8y7QtWuZhwwpKE2fyaRY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1db42b7fe3878f3f5f7a4f2dc210772fd080e205",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-20.03",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "mariadb-10_4": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1688392541,
+        "narHash": "sha256-lHrKvEkCPTUO+7tPfjIcb7Trk6k31rz18vkyqmkeJfY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ea4c80b39be4c09702b0cb3b42eab59e2ba4f24b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-22.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "mariadb-10_5": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1751274312,
+        "narHash": "sha256-/bVBlRpECLVzjV19t5KMdMFWSwKLtb5RyXdjz3LJT+g=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "50ab793786d9de88ee30ec4e4c24fb4236fc2674",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-24.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "mysql-5_7": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1685573264,
+        "narHash": "sha256-Zffu01pONhs/pqH07cjlF10NnMDLok8ix5Uk4rhOnZQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "380be19fbd2d9079f677978361792cb25e8a3635",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-22.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "mysql-8_0": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782847189,
+        "narHash": "sha256-twXPFqFsrrY5r28Zh7Homgcp2gUMBgQ6WDS98Q/3xFI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b6018f87da91d19d0ab4cf979885689b469cdd41",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-25.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nix-fetcher-data": {
+      "inputs": {
+        "nixpkgs": [
+          "tact",
+          "clj-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792178580,
+        "narHash": "sha256-mgYSCONYCvRxseh3nssE2aLV3xeCXY6UVXkntgCUe+s=",
+        "owner": "jlesquembre",
+        "repo": "nix-fetcher-data",
+        "rev": "5df8c50525f4ea9f40b6ffe4183386d92e4874f5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlesquembre",
+        "repo": "nix-fetcher-data",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1792503283,
+        "narHash": "sha256-vhe2jyvRCgufWPqDuDq1S3t3ypE+ka46IFutV02xKso=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cd4ea8d57de16f4810bc5f14207bac45fbf19f67",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "mariadb-10_11": [
+          "nixpkgs"
+        ],
+        "mariadb-10_3": "mariadb-10_3",
+        "mariadb-10_4": "mariadb-10_4",
+        "mariadb-10_5": "mariadb-10_5",
+        "mariadb-10_6": [
+          "nixpkgs"
+        ],
+        "mariadb-11_4": [
+          "nixpkgs"
+        ],
+        "mariadb-11_8": [
+          "nixpkgs"
+        ],
+        "mysql-5_7": "mysql-5_7",
+        "mysql-8_0": "mysql-8_0",
+        "mysql-8_4": [
+          "nixpkgs"
+        ],
+        "nixpkgs": "nixpkgs",
+        "tact": "tact"
+      }
+    },
+    "sand": {
+      "inputs": {
+        "clj-nix": [
+          "tact",
+          "clj-nix"
+        ],
+        "nixpkgs": [
+          "tact",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792446819,
+        "narHash": "sha256-XJ1NmPxyHNfhTXRJWzHNDNML47eYL5cQbd/w3pwKq88=",
+        "owner": "john-shaffer",
+        "repo": "sand",
+        "rev": "7b82e73add253f3a082536356879e31063645c95",
+        "type": "github"
+      },
+      "original": {
+        "owner": "john-shaffer",
+        "repo": "sand",
+        "type": "github"
+      }
+    },
+    "tact": {
+      "inputs": {
+        "clj-nix": "clj-nix",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "sand": "sand"
+      },
+      "locked": {
+        "lastModified": 1792548879,
+        "narHash": "sha256-Yx/kOeoJcAqJN8sc40kM1lVeVGeS5yGt7UamVjkyQ9E=",
+        "owner": "john-shaffer",
+        "repo": "tact",
+        "rev": "505ffb1a9fb352a237fec7ed026c12fd7cfa187d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "john-shaffer",
+        "repo": "tact",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

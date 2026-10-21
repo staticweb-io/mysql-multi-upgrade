@@ -1,0 +1,30 @@
+name = "--mysqld-arg and --defaults-file reach each server"
+
+[setup.files."my.cnf"]
+content = """
+[mysqld]
+no-such-option-from-defaults = 1
+"""
+
+[[steps]]
+run = "use-fixture mariadb-11.4"
+
+[[steps]]
+run = "datadir-upgrade upgrade --mysqld-arg=--no-such-option=1 data"
+
+[steps.expected]
+exit-code = 1
+stderr-contains = "unknown variable 'no-such-option=1'"
+
+[[steps]]
+run = "datadir-upgrade upgrade --defaults-file=$PWD/my.cnf data"
+
+[steps.expected]
+exit-code = 1
+stderr-contains = "unknown variable 'no-such-option-from-defaults=1'"
+
+[[steps]]
+run = "datadir-upgrade upgrade --mysqld-arg=--innodb-buffer-pool-size=32M --log-dir=logs data"
+
+[steps.expected.files."logs/mariadb-11.8.err"]
+exists = true

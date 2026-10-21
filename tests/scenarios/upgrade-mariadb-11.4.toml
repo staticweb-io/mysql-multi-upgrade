@@ -1,0 +1,22 @@
+name = "upgrade takes a mariadb-11.4 data dir to mariadb-11.8"
+
+[[steps]]
+run = "use-fixture mariadb-11.4"
+
+[[steps]]
+run = "datadir-upgrade upgrade data"
+
+[steps.expected]
+stdout-matches = "^Upgraded .*/data from mariadb 11\\.4\\.\\d+ to mariadb 11\\.8\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade detect data"
+
+[steps.expected]
+stdout-matches = "^mariadb 11\\.8\\.\\d+$"
+
+[[steps]]
+run = "verify-as mariadb-11.8 mariadb-11.4"
+
+[steps.expected]
+stdout-matches = "^verified with 11\\.8\\.\\d+-MariaDB$"

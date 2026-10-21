@@ -1,0 +1,35 @@
+name = "upgrade stops at the first server that fails and leaves the data dir at the last good version"
+
+[setup.files."broken/bin/mariadbd"]
+content = """
+#!/bin/sh
+for arg; do case "$arg" in --log-error=*) echo "[ERROR] broken on purpose" > "${arg#*=}" ;; esac; done
+exit 3
+"""
+
+[[steps]]
+run = "chmod +x broken/bin/mariadbd && use-fixture mariadb-10.3"
+
+[[steps]]
+run = "datadir-upgrade upgrade --server mariadb-10.5=$PWD/broken data"
+
+[steps.expected]
+exit-code = 1
+stdout-contains = "Starting mariadb 10.5"
+stdout-not-contains = "Starting mariadb 10.6"
+stderr-contains = [
+  "Error: mariadb 10.5 exited with status 3 while starting.",
+  "[ERROR] broken on purpose",
+]
+
+[[steps]]
+run = "datadir-upgrade detect data"
+
+[steps.expected]
+stdout-matches = "^mariadb 10\\.4\\.\\d+$"
+
+[[steps]]
+run = "datadir-upgrade upgrade data && verify-as mariadb-11.8 mariadb-10.3"
+
+[steps.expected]
+stdout-matches = "^verified with 11\\.8\\."

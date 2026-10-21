@@ -1,0 +1,17 @@
+name = "upgrade to the current version runs only that version"
+
+[[steps]]
+run = "use-fixture mariadb-11.8"
+
+[[steps]]
+run = "datadir-upgrade upgrade --to 11.8 data"
+
+[steps.expected]
+stdout-contains = "Steps: mariadb-11.8\n"
+stdout-matches = "^Upgraded .* from mariadb 11\\.8\\.\\d+ to mariadb 11\\.8\\.\\d+$"
+
+[[steps]]
+run = "verify-as mariadb-11.8 mariadb-11.8"
+
+[steps.expected]
+stdout-matches = "^verified with 11\\.8\\."

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# verify-as SERVER FIXTURE [DIR]: checks DIR (default: data) with SERVER,
+# such as mariadb-11.8, against FIXTURE's expected data
+set -euo pipefail
+here="$(dirname "$0")/.."
+server="$(jq -er --arg n "$1" '.[$n]' "$DATADIR_UPGRADE_SERVERS")"
+exec bash "$here/verify.sh" "$server" "$(realpath "${3:-data}")" "$FIXTURES/$2/expected"

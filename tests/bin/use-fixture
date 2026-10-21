@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# use-fixture NAME [DIR]: copies fixture NAME's data dir to DIR (default: data)
+set -euo pipefail
+cp -r "$FIXTURES/$1/data" "${2:-data}"
+chmod -R u+w "${2:-data}"
