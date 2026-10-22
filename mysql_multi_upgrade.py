@@ -234,36 +234,31 @@ def default_flake():
     )
 
 
-def resolve_servers(flavor, steps, overrides, flake, gcroots):
-    """Store paths of the servers for `steps`, from `overrides` or by
-    building them from `flake`. Built servers get GC roots in
-    `gcroots`, since a garbage collection during a later build could
-    otherwise delete them."""
-    paths = {}
-    for ver in steps:
-        name = package_name(flavor, ver)
-        if name in overrides:
-            paths[ver] = overrides[name]
-            continue
-        flake = flake or default_flake()
-        print(f"Fetching {name} from {flake}", flush=True)
-        # Quoted, since the names have dots
-        result = subprocess.run(
-            [
-                "nix",
-                "build",
-                "--out-link",
-                str(gcroots / name),
-                "--print-out-paths",
-                f'{flake}#"{name}"',
-            ],
-            stdout=subprocess.PIPE,
-            text=True,
-        )
-        if result.returncode != 0:
-            raise UpgradeError(f"nix build of {name} failed")
-        paths[ver] = result.stdout.strip().splitlines()[-1]
-    return paths
+def server_path(name, overrides, flake, gcroots):
+    """The store path of server `name`, from `overrides` or by building
+    it from `flake`. A built server gets a GC root in `gcroots`, since
+    a garbage collection during a later build could otherwise delete
+    it."""
+    if name in overrides:
+        return overrides[name]
+    flake = flake or default_flake()
+    print(f"Fetching {name} from {flake}", flush=True)
+    # Quoted, since the names have dots
+    result = subprocess.run(
+        [
+            "nix",
+            "build",
+            "--out-link",
+            str(gcroots / name),
+            "--print-out-paths",
+            f'{flake}#"{name}"',
+        ],
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise UpgradeError(f"nix build of {name} failed")
+    return result.stdout.strip().splitlines()[-1]
 
 
 def first_existing(base, names):
@@ -479,7 +474,12 @@ def upgrade(
     try:
         gcroots = Path(run_dir) / "gcroots"
         gcroots.mkdir()
-        servers = resolve_servers(current.flavor, steps, overrides, flake, gcroots)
+        servers = {
+            ver: server_path(
+                package_name(current.flavor, ver), overrides, flake, gcroots
+            )
+            for ver in steps
+        }
         # Absolute, since servers resolve --log-error from the data dir
         log_dir = os.path.abspath(
             log_dir or tempfile.mkdtemp(prefix="mysql-multi-upgrade-logs.")
