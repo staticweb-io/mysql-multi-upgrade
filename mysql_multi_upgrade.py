@@ -234,9 +234,11 @@ def default_flake():
     )
 
 
-def resolve_servers(flavor, steps, overrides, flake):
+def resolve_servers(flavor, steps, overrides, flake, gcroots):
     """Store paths of the servers for `steps`, from `overrides` or by
-    building them from `flake`."""
+    building them from `flake`. Built servers get GC roots in
+    `gcroots`, since a garbage collection during a later build could
+    otherwise delete them."""
     paths = {}
     for ver in steps:
         name = package_name(flavor, ver)
@@ -247,7 +249,14 @@ def resolve_servers(flavor, steps, overrides, flake):
         print(f"Fetching {name} from {flake}", flush=True)
         # Quoted, since the names have dots
         result = subprocess.run(
-            ["nix", "build", "--no-link", "--print-out-paths", f'{flake}#"{name}"'],
+            [
+                "nix",
+                "build",
+                "--out-link",
+                str(gcroots / name),
+                "--print-out-paths",
+                f'{flake}#"{name}"',
+            ],
             stdout=subprocess.PIPE,
             text=True,
         )
@@ -466,16 +475,18 @@ def upgrade(
     print(f"{datadir} is {current}")
     print("Steps: " + " -> ".join(f"{current.flavor}-{v}" for v in steps), flush=True)
     check_unlocked(datadir)
-    servers = resolve_servers(current.flavor, steps, overrides, flake)
-    # Absolute, since servers resolve --log-error from the data dir
-    log_dir = os.path.abspath(
-        log_dir or tempfile.mkdtemp(prefix="mysql-multi-upgrade-logs.")
-    )
-    os.makedirs(log_dir, exist_ok=True)
-    print(f"Server logs are in {log_dir}", flush=True)
     run_dir = make_run_dir(datadir)
-    warnings = []
     try:
+        gcroots = Path(run_dir) / "gcroots"
+        gcroots.mkdir()
+        servers = resolve_servers(current.flavor, steps, overrides, flake, gcroots)
+        # Absolute, since servers resolve --log-error from the data dir
+        log_dir = os.path.abspath(
+            log_dir or tempfile.mkdtemp(prefix="mysql-multi-upgrade-logs.")
+        )
+        os.makedirs(log_dir, exist_ok=True)
+        print(f"Server logs are in {log_dir}", flush=True)
+        warnings = []
         for ver in steps:
             server = Server(
                 servers[ver],
