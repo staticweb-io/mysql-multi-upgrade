@@ -261,6 +261,22 @@ def server_path(name, overrides, flake, gcroots):
     return result.stdout.strip().splitlines()[-1]
 
 
+def delete_server(gcroots, name):
+    """Removes the GC roots of server `name`, one per output, such as
+    `mariadb-11.8` and `mariadb-11.8-man`, then deletes their closures
+    except for what something else keeps alive."""
+    links = [gcroots / name] + sorted(gcroots.glob(f"{name}-*"))
+    paths = [os.readlink(link) for link in links]
+    for link in links:
+        link.unlink()
+    print(f"Deleting {name} from the Nix store", flush=True)
+    result = subprocess.run(
+        ["nix", "store", "delete", "--recursive", "--skip-alive"] + paths
+    )
+    if result.returncode != 0:
+        print(f"Warning: Can't delete {name} from the Nix store", file=sys.stderr)
+
+
 def first_existing(base, names):
     for n in names:
         p = Path(base) / "bin" / n
@@ -462,7 +478,15 @@ def make_run_dir(datadir):
 
 
 def upgrade(
-    datadir, target, overrides, flake, log_dir, extra_args, defaults_file, timeout
+    datadir,
+    target,
+    overrides,
+    flake,
+    log_dir,
+    extra_args,
+    defaults_file,
+    timeout,
+    low_disk,
 ):
     datadir = Path(datadir).resolve()
     current = detect(datadir)
@@ -474,12 +498,15 @@ def upgrade(
     try:
         gcroots = Path(run_dir) / "gcroots"
         gcroots.mkdir()
-        servers = {
-            ver: server_path(
+
+        def resolve(ver):
+            return server_path(
                 package_name(current.flavor, ver), overrides, flake, gcroots
             )
-            for ver in steps
-        }
+
+        # Building every server first finds a build failure before any
+        # step changes the data dir
+        servers = {} if low_disk else {ver: resolve(ver) for ver in steps}
         # Absolute, since servers resolve --log-error from the data dir
         log_dir = os.path.abspath(
             log_dir or tempfile.mkdtemp(prefix="mysql-multi-upgrade-logs.")
@@ -489,7 +516,7 @@ def upgrade(
         warnings = []
         for ver in steps:
             server = Server(
-                servers[ver],
+                servers[ver] if ver in servers else resolve(ver),
                 current.flavor,
                 ver,
                 str(datadir),
@@ -509,6 +536,9 @@ def upgrade(
                 server.stop(timeout)
             finally:
                 server.kill()
+            name = package_name(current.flavor, ver)
+            if low_disk and name not in overrides:
+                delete_server(gcroots, name)
         for w in warnings:
             print(f"Warning: {w}", file=sys.stderr)
         print(f"Upgraded {datadir} from {current} to {detect(datadir)}")
@@ -562,6 +592,12 @@ def main(argv=None):
         help="Where to write server logs. Default: a new temporary directory",
     )
     p.add_argument(
+        "--low-disk",
+        action="store_true",
+        help="Build each server just before its step and delete it after,"
+        " instead of building them all first",
+    )
+    p.add_argument(
         "--mysqld-arg",
         action="append",
         default=[],
@@ -603,6 +639,7 @@ def main(argv=None):
                 args.mysqld_arg,
                 args.defaults_file,
                 args.timeout,
+                args.low_disk,
             )
         elif args.command == "versions":
             print(supported().replace(", ", "\n"))

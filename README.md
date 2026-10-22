@@ -71,6 +71,13 @@ After an upgrade to MySQL 8.4, it warns about users that use
   on, such as `innodb_page_size` or `lower_case_table_names`.
 - `--mysqld-arg ARG`: an extra server argument. Repeatable.
 - `--log-dir DIR`: where to keep the server logs.
+- `--low-disk`: build each server just before its step, and after
+  the step, delete it from the Nix store, along with whatever in its
+  closure nothing else keeps alive.
+  Use it on a machine that can't hold every server at once.
+  A build failure then stops the upgrade partway, rather than before
+  it starts, and servers that share dependencies may download them
+  again.
 - `--server NAME=PATH`: use the server at `PATH`, such as
   `mariadb-10.4=/nix/store/...-mariadb-server-10.4.27`.
   `MYSQL_MULTI_UPGRADE_SERVERS` can name a JSON file with the same map.

@@ -1,0 +1,65 @@
+name = "--low-disk builds each server just before its step and deletes it after"
+
+# Logs each call and builds from MYSQL_MULTI_UPGRADE_SERVERS, with a
+# second output like the servers' man pages
+[setup.files."bin/nix"]
+content = """
+#!/bin/sh
+case "$1 $2" in
+build\\ *)
+  shift
+  while [ "$1" != --out-link ]; do shift; done
+  link="$2"
+  name="$(basename "$link")"
+  echo "build $name" >> "$NIX_LOG"
+  path="$(jq -r --arg n "$name" '.[$n]' "$SERVERS")"
+  ln -s "$path" "$link"
+  ln -s "$path-man" "$link-man"
+  echo "$path-man"
+  echo "$path"
+  ;;
+store\\ delete)
+  shift 2
+  printf delete >> "$NIX_LOG"
+  for p; do
+    case "$p" in --*) continue ;; esac
+    base="${p%-man}"
+    n="$(jq -r --arg p "$base" 'to_entries[] | select(.value == $p) | .key' "$SERVERS")"
+    [ "$base" = "$p" ] || n="$n-man"
+    printf ' %s' "$n" >> "$NIX_LOG"
+  done
+  echo >> "$NIX_LOG"
+  ;;
+esac
+"""
+
+[[steps]]
+run = "chmod +x bin/nix && use-fixture mariadb-10.11"
+
+[[steps]]
+run = """
+NIX_LOG=$PWD/nix.log SERVERS=$MYSQL_MULTI_UPGRADE_SERVERS PATH=$PWD/bin:$PATH \
+  env -u MYSQL_MULTI_UPGRADE_SERVERS mysql-multi-upgrade upgrade --flake fake --low-disk data
+"""
+
+[steps.expected]
+stdout-matches = "^Upgraded .* to mariadb 11\\.8\\.\\d+$"
+
+[[steps]]
+run = "cat nix.log"
+
+[steps.expected]
+stdout = """
+build mariadb-10.11
+delete mariadb-10.11 mariadb-10.11-man
+build mariadb-11.4
+delete mariadb-11.4 mariadb-11.4-man
+build mariadb-11.8
+delete mariadb-11.8 mariadb-11.8-man
+"""
+
+[[steps]]
+run = "verify-as mariadb-11.8 mariadb-10.11"
+
+[steps.expected]
+stdout-matches = "^verified with 11\\.8\\."
